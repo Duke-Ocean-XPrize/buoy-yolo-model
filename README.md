@@ -1,10 +1,8 @@
-# Product Name
+# Buoy Acquisition Yolo
 > A relatively janky but working custom object detection yolo model
 
 
-Drone buoy aquisition model. 
-
-![](iphone.gif)
+Drone buoy acquisition model. 
 
 ## Installation
 
