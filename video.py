@@ -52,7 +52,8 @@ while True:
 
             print("midpoint ({},{})".format(midpointX, midpointY))
 
-            s.send("x:{}, y:{}".format(midpointX, midpointY).encode())
+            #s.send("x:{}, y:{}".format(midpointX, midpointY).encode())
+            s.send("{}/{}/{}".format(midpointX, midpointY).encode())
 
 
             end = timeit.timeit()
@@ -88,6 +89,10 @@ while True:
         #print('FPS {:.1f}'.format(1 / (time.time() - stime)))
         #print('[INFO] elapsed time: {:.2f}'.format(time.time() - stime))
         #print(label)
+    else:
+        print("midpoint X: n, Y: n")
+        s.send(b"/n/n/n")
+        
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
