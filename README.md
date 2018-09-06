@@ -9,6 +9,11 @@ Drone buoy acquisition model.
 python install -r requirements.txt
 ```
 
+## Step 1.5: You may have to build the cython module with:
+```
+python setup.py build_ext --inplace
+```
+
 ## Step 2: Run Server
 ```sh
 python server.py
