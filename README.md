@@ -4,12 +4,18 @@
 
 Drone buoy acquisition model. 
 
-## Installation
-
-OS X & Linux:
-
+## Step 1: Install (OS X & Linux)
 ```sh
 python install -r requirements.txt
+```
+
+## Step 2: Run Server
+```sh
+python server.py
+```
+
+## Step 3: Run model + inferences
+```sh
 python video.py
 ```
 
@@ -17,12 +23,6 @@ python video.py
 
 Run python video.py. Starts OpenCV. Find the buoy. 
 
-## Development setup
-
-```sh
-python install -r requirements.txt
-python video.py
-```
 
 ## Release History
 
