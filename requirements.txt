@@ -1,0 +1,7 @@
+Cython==0.27.1
+requests==2.19.1
+pytest==3.6.0
+numpy==1.14.5
+opencv_python==3.3.0.10
+tensorflow==1.8.0
+setuptools==40.0.0
