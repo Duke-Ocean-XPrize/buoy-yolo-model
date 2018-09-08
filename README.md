@@ -14,6 +14,21 @@ python install -r requirements.txt
 python setup.py build_ext --inplace
 ```
 
+## Step 2: Download model checkpoints 
+
+https://www.dropbox.com/sh/umc9m3ojzbd0glj/AAAkrO3G6BcrVax9euKJdsuia?dl=0
+
+The models should live inside a folder labeled 'ckpt' in the root directory:
+
+```
+--ckpt
+    |-- tiny-yolo-voc-1c-1375.data-00000-of-00001
+    |-- tiny-yolo-voc-1c-1375.index
+    |-- tiny-yolo-voc-1c-1375.meta
+    |-- tiny-yolo-voc-1c-1375.profile
+
+```
+
 ## Step 2: Run Server
 ```sh
 python server.py
