@@ -16,14 +16,15 @@ exception:
 TCP_IP = '127.0.0.1' #Currently set to localhost
 TCP_PORT = 5005
 BUFFER_SIZE = 1024
-FRAME_HEIGHT = 1080
-FRAME_WIDTH = 1920
+FRAME_HEIGHT = 640
+FRAME_WIDTH = 480
 options = {
     'model': 'cfg/tiny-yolo-voc-1c.cfg',
     'load': 1375,
     'threshold': 0.1,
 }
-colors = [tuple(np.random.randint(low=0, high=256, size=3)) for _ in range(10)]
+
+colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
 
 #Opening socket connection on given IP and Port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,6 +41,7 @@ capture.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
 #Helper methods
 def determine_direction(movement_vectors):
     result_strings = ("", "")
+    result_strings = list(result_strings)
     if(movement_vectors[0] < 0):
         result_strings[0] = "go left {}".format(movement_vectors[0])
     else:
@@ -51,9 +53,9 @@ def determine_direction(movement_vectors):
 
 #Main program loop
 while True:
-    s.send('HTTP/1.0 200 OK\n')
-    s.send('Content-Type: text/html\n')
-    s.send('\n') # header and body should be separated by additional newline
+    s.send('HTTP/1.0 200 OK\n'.encode())
+    s.send('Content-Type: text/html\n'.encode())
+    s.send('\n'.encode()) # header and body should be separated by additional newline
     #Read frame-date from VideoCapture object
     capture_successful, frame = capture.read()
     if capture_successful:
@@ -77,7 +79,7 @@ while True:
             print("midpoint ({},{})".format(borderbox_midpoint[0], borderbox_midpoint[1]))
             print("movement-vectors: {}".format(movement_vectors))
 
-            s.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
+            s.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors).encode())
 
             label = result['label']
             confidence = result['confidence']
@@ -85,15 +87,16 @@ while True:
             frame = cv2.rectangle(frame, borderbox_topleft, borderbox_bottomright, color, 5)
             frame = cv2.putText(frame, text, borderbox_topleft, cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 0), 2)
             text_directions = determine_direction(movement_vectors)
-            frame = cv2.putText(frame, text_directions[0], (20, 155), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
-            frame = cv2.putText(frame, text_directions[1], (20, 55), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
+            if text_directions:
+                frame = cv2.putText(frame, text_directions[0], (20, 155), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
+                frame = cv2.putText(frame, text_directions[1], (20, 55), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
 
             if(movement_vectors[0] < 25 and movement_vectors[1] < 25):
                 frame = cv2.putText(frame, "LANDING PAD CENTERED", (20, 300), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
         cv2.imshow('frame', frame)
     else:
         #No midpoint found due to failed frame-capture
-        s.send("<html><body><h1>{}</h1></body></html>".format("Frame not captured"))
+        s.send("<html><body><h1>{}</h1></body></html>".format("Frame not captured").encode())
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
