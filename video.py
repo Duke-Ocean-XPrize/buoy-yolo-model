@@ -64,7 +64,7 @@ while True:
             borderbox_bottomright = (result['bottomright']['x'], result['bottomright']['y'])
 
             #Calculating midpoint on frame
-            borderbox_midpoint = (borderbox_topleft[0] + borderbox_bottomright[0])/2, result['topleft']['y'] + result['bottomright']['y'])/2)
+            borderbox_midpoint = ((borderbox_topleft[0] + borderbox_bottomright[0])/2, (borderbox_topleft[1] + borderbox_bottomright[1])/2)
 
             '''
             Calculating movement distances (in pixels) required to center border-box on frame.
