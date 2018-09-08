@@ -1,9 +1,16 @@
+#!/Users/Zapata/anaconda/lib/python2.7
 import cv2
 from darkflow.net.build import TFNet
 import numpy as np
-import time
-import timeit
 import socket
+
+'''INTEGRATION CODE
+connect_string = serial.Serial('/dev/ttyUSB0') #Used to connect serially with the drone via drone-kit (gives access to camera and perhaps localhost on drone board)
+try:
+    vehicle = connect(connect_string, heartbeat_timeout=1) #Connects to the vehicle and returns vehicle object. Exception thrown if heartbeat not received in 1 second.
+exception:
+    print("VEHICLE CONNECTION DID NOT WORK")
+'''
 
 #Setting variables
 TCP_IP = '127.0.0.1' #Currently set to localhost
@@ -44,6 +51,9 @@ def determine_direction(movement_vectors):
 
 #Main program loop
 while True:
+    c.send('HTTP/1.0 200 OK\n')
+    c.send('Content-Type: text/html\n')
+    c.send('\n') # header and body should be separated by additional newline
     #Read frame-date from VideoCapture object
     capture_successful, frame = capture.read()
     if capture_successful:
@@ -69,9 +79,6 @@ while True:
             print("midpoint ({},{})".format(midpointX, midpointY))
             print("movement-vectors: {}".format(movement_vectors))
 
-            c.send('HTTP/1.0 200 OK\n')
-            c.send('Content-Type: text/html\n')
-            c.send('\n') # header and body should be separated by additional newline
             c.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
 
             label = result['label']
@@ -89,8 +96,7 @@ while True:
         cv2.imshow('frame', frame)
     else:
         #No midpoint found due to failed frame-capture
-        print("midpoint X: n, Y: n")
-        s.send(b"n/n/n")
+        c.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
