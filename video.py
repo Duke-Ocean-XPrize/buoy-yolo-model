@@ -92,7 +92,7 @@ while True:
 
             if(movement_vectors[0] < 25 and movement_vectors[1] < 25):
                 frame = cv2.putText(frame, "LANDING PAD CENTERED", (20, 300), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
-            cv2.imshow('frame', frame)
+        cv2.imshow('frame', frame)
     else:
         #No midpoint found due to failed frame-capture
         s.send("<html><body><h1>{}</h1></body></html>".format("Frame not captured"))
