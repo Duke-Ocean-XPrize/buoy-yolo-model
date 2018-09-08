@@ -64,9 +64,7 @@ while True:
             borderbox_bottomright = (result['bottomright']['x'], result['bottomright']['y'])
 
             #Calculating midpoint on frame
-            midpointX = (borderbox_topleft[0] + borderbox_bottomright[0])/2
-            midpointY = (result['topleft']['y'] + result['bottomright']['y'])/2
-            borderbox_midpoint = (midpointX, midpointY)
+            borderbox_midpoint = (borderbox_topleft[0] + borderbox_bottomright[0])/2, result['topleft']['y'] + result['bottomright']['y'])/2)
 
             '''
             Calculating movement distances (in pixels) required to center border-box on frame.
@@ -76,7 +74,7 @@ while True:
             frame_center = (np.floor(FRAME_WIDTH/2), np.floor(FRAME_HEIGHT/2))
             movement_vectors = (frame_center[0] - borderbox_midpoint[0], frame_center[1] - borderbox_midpoint[1])
 
-            print("midpoint ({},{})".format(midpointX, midpointY))
+            print("midpoint ({},{})".format(borderbox_midpoint[0], borderbox_midpoint[1]))
             print("movement-vectors: {}".format(movement_vectors))
 
             s.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
