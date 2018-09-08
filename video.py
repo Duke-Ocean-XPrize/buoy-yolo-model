@@ -51,9 +51,9 @@ def determine_direction(movement_vectors):
 
 #Main program loop
 while True:
-    c.send('HTTP/1.0 200 OK\n')
-    c.send('Content-Type: text/html\n')
-    c.send('\n') # header and body should be separated by additional newline
+    s.send('HTTP/1.0 200 OK\n')
+    s.send('Content-Type: text/html\n')
+    s.send('\n') # header and body should be separated by additional newline
     #Read frame-date from VideoCapture object
     capture_successful, frame = capture.read()
     if capture_successful:
@@ -79,7 +79,7 @@ while True:
             print("midpoint ({},{})".format(midpointX, midpointY))
             print("movement-vectors: {}".format(movement_vectors))
 
-            c.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
+            s.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
 
             label = result['label']
             confidence = result['confidence']
@@ -92,11 +92,10 @@ while True:
 
             if(movement_vectors[0] < 25 and movement_vectors[1] < 25):
                 frame = cv2.putText(frame, "LANDING PAD CENTERED", (20, 300), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
-
-        cv2.imshow('frame', frame)
+            cv2.imshow('frame', frame)
     else:
         #No midpoint found due to failed frame-capture
-        c.send("<html><body><h1>{}</h1></body></html>".format(movement_vectors))
+        s.send("<html><body><h1>{}</h1></body></html>".format("Frame not captured"))
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
