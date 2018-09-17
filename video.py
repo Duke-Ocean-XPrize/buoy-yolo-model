@@ -43,13 +43,13 @@ def determine_direction(movement_vectors):
     result_strings = ("", "")
     result_strings = list(result_strings)
     if(movement_vectors[0] < 0):
-        result_strings[0] = "go left {}".format(movement_vectors[0])
+        result_strings[0] = "go left {}".format(abs(movement_vectors[0]))
     else:
-        result_strings[0] = "go right {}".format(movement_vectors[0])
+        result_strings[0] = "go right {}".format(abs(movement_vectors[0]))
     if(movement_vectors[1] < 0):
-        result_strings[1] = "go up {}".format(movement_vectors[1])
+        result_strings[1] = "go down {}".format(abs(movement_vectors[1]))
     else:
-        result_strings[1] = "go down {}".format(movement_vectors[1])
+        result_strings[1] = "go up {}".format(abs(movement_vectors[1]))
 
 #Main program loop
 while True:
@@ -74,7 +74,7 @@ while True:
             There would of course be some range of acceptable valuables for x and y.
             '''
             frame_center = (np.floor(FRAME_WIDTH/2), np.floor(FRAME_HEIGHT/2))
-            movement_vectors = (frame_center[0] - borderbox_midpoint[0], frame_center[1] - borderbox_midpoint[1])
+            movement_vectors = (borderbox_midpoint[0] - frame_center[0], frame_center[1] - borderbox_midpoint[1])
 
             print("midpoint ({},{})".format(borderbox_midpoint[0], borderbox_midpoint[1]))
             print("movement-vectors: {}".format(movement_vectors))
