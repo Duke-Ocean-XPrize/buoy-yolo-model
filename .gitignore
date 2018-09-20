@@ -19,6 +19,7 @@ tfnet/yolo/parse-history.txt
 tfnet/yolo/*.parsed
 *.txt
 !requirements*.txt
+!labels*.txt
 *.pb
 /profile
 /test.py
