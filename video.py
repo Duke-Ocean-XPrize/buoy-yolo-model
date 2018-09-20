@@ -5,9 +5,8 @@ import time
 import timeit
 import socket
 
-#ser = serial.Serial('/dev/ttyUSB0')
 TCP_IP = '127.0.0.1'
-TCP_PORT = 5005
+TCP_PORT = 5006
 BUFFER_SIZE = 1024
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,32 +32,35 @@ while True:
     start = timeit.timeit()
     ret, frame = capture.read()
     if ret:
+
+        gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        the_marker = np.float32(gray)
+            
+        corners = cv2.goodFeaturesToTrack(the_marker, 100, 0.1, 10)
+        corners = np.int0(corners)
+
+        for corner in corners:
+            x, y = corner.ravel()
+            cv2.circle(frame,(x,y), 3, 255, -1)
+
         results = tfnet.return_predict(frame)
         for color, result in zip(colors, results):
             tl = (result['topleft']['x'], result['topleft']['y'])
-            #print("topleft x {}".format(result['topleft']['x']))
-            #print("topleft y {}".format(result['topleft']['y']))
 
             midpointX = (result['topleft']['x'] + result['bottomright']['x'])/2 
             midpointY = (result['topleft']['y'] + result['bottomright']['y'])/2
 
             distX = abs(midpointX - 600)
             distY = abs(midpointY - 400)
-
+            
+            raw_distance = round( (1-(result['topleft']['x'] + result['bottomright']['x'])), 1)
+            print("raw distance: {}".format(raw_distance))
 
             br = (result['bottomright']['x'], result['bottomright']['y'])
-            #print("bottomright x {}".format(result['bottomright']['x']))
-            #print("bottomright y {}".format(result['bottomright']['y']))
 
             print("midpoint ({},{})".format(midpointX, midpointY))
 
-            #s.send("x:{}, y:{}".format(midpointX, midpointY).encode())
-            s.send("{}/{}/{}".format(midpointX, midpointY).encode())
-
-
-            end = timeit.timeit()
-            print("latency???? in milliseconds {}".format((end - start)*1000))
-
+            s.send("x:{}, y:{}".format(midpointX, midpointY).encode())
 
             label = result['label']
             confidence = result['confidence']
@@ -83,12 +85,9 @@ while True:
             if(distX < 25 and distY < 25):
                 frame = cv2.putText(
                 frame, "LANDING PAD CENTERED", (20, 300), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
-
-            #print('{} -- {}'.format(label, confidence))
         cv2.imshow('frame', frame)
-        #print('FPS {:.1f}'.format(1 / (time.time() - stime)))
-        #print('[INFO] elapsed time: {:.2f}'.format(time.time() - stime))
-        #print(label)
+        cv2.imshow('corners', frame)
+
     else:
         print("midpoint X: n, Y: n")
         s.send(b"/n/n/n")
