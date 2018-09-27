@@ -18,7 +18,7 @@ imgpoints = [] # 2d points in image plane.
 
 #Retrieving Distortion and 3D Matrices
 try:
-    calibration_file = open("calibration_data.yaml", 'r')
+    calibration_file = open("fiducial/calibration_data.yaml", 'r')
     data_dict = yaml.load(calibration_file)
     mtx = data_dict["mtx"]
     dist = data_dict["dist"]
