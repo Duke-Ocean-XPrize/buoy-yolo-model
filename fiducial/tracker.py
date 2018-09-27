@@ -24,15 +24,13 @@ cap = cv2.VideoCapture(0)
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
-# prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
 objp = np.zeros((6*7,3), np.float32)
 objp[:,:2] = np.mgrid[0:7,0:6].T.reshape(-1,2)
 
-# Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
 
-images = glob.glob('./marker/calib_images/*.jpg')
+images = glob.glob('./fiducial/calib_images/*.jpg')
 
 def find_marker():
     for fname in images:
@@ -41,9 +39,6 @@ def find_marker():
 
         # Find the chess board corners
         ret, corners = cv2.findChessboardCorners(gray, (7,6),None)
-        #print(corners)
-        #print(objpoints)
-
         # If found, add object points, image points (after refining them)
         if ret == True:
             objpoints.append(objp)
@@ -57,8 +52,8 @@ def find_marker():
 
     ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
-
-    while (True):
+    print("FIDUCIAL SYSTEM UP ##########################")
+    while True:
         ret, frame = cap.read()
         # operations on the frame come here
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -93,10 +88,7 @@ def find_marker():
             midpointX = (topleftX  + bottomrightX)/2 
             midpointY = (topleftY + bottomrightY)/2
 
-            
-
             #print("marker midpoint X: {}, Y: {}".format(midpointX, midpointY))
             s.send("{}/{}/{}".format(midpointX, midpointY, distance).encode())
-
-        else:
-            s.send(b"/n/n/n")
+    
+    return 'new'

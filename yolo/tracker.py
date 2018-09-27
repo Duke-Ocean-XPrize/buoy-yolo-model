@@ -29,6 +29,7 @@ capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 def find_object():
+    print("YOLO SYSTEM UP ##########################")
     while True:
         ret, frame = capture.read()
         if ret:
@@ -41,11 +42,11 @@ def find_object():
 
                 br = (result['bottomright']['x'], result['bottomright']['y'])
 
+                raw_distance = round(result['topleft']['x'] + result['bottomright']['x'], 1)
+
                 label = result['label']
                 confidence = result['confidence']
 
-                s.send("x:{}, y:{}".format(midpointX, midpointY).encode())
+                s.send("x:{}, y:{}, distance:{}".format(midpointX, midpointY, raw_distance).encode())
 
-        else:
-            print("bouy midpoint X: n, Y: n")
-            s.send(b"/n/n/n")
+                yield midpointX, midpointY, raw_distance

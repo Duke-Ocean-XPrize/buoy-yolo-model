@@ -1,10 +1,19 @@
-import marker.tracker
+import fiducial.tracker
 import yolo.tracker
 
+threshold = 540
 
 if __name__ == '__main__':
     yolo_marker = yolo.tracker.find_object()
-    #fiducial_marker = marker.tracker.find_marker() 
+    while True:
+        if yolo_marker.__next__()[2] < threshold:
+            print(yolo_marker.__next__())
+        else:
+            fiducial_marker = fiducial.tracker.find_marker()
+            print("fiducial system running")
+            print(fiducial_marker.__next__())
+
+
 
         
     
