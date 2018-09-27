@@ -1,8 +1,7 @@
-# Buoy Acquisition Yolo
-> A relatively janky but working custom object detection yolo model
+# Buoy Acquisition System
+> Buoy Aquisition System - YOLO + Fiducial + Controller
 
-
-Drone buoy acquisition model. 
+Drone buoy acquisition system X-Prize. 
 
 ## Step 1: Install (OS X & Linux)
 ```sh
