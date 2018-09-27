@@ -4,16 +4,7 @@ import numpy as np
 import time
 import timeit
 import socket
-
-midpointX = 0
-midpointY = 0
-
-TCP_IP = '127.0.0.1'
-TCP_PORT = 5006
-BUFFER_SIZE = 1024
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT))
+import vision_system
 
 options = {
     'model': './yolo/cfg/tiny-yolo-voc-1c.cfg',
@@ -24,14 +15,10 @@ options = {
 tfnet = TFNet(options)
 colors = [tuple(255 * np.random.rand(3)) for _ in range(10)]
 
-capture = cv2.VideoCapture(0)
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
 def find_object():
     print("YOLO SYSTEM UP ##########################")
     while True:
-        ret, frame = capture.read()
+        ret, frame = vision_system.capture.read()
         if ret:
             results = tfnet.return_predict(frame)
             for color, result in zip(colors, results):
@@ -47,6 +34,6 @@ def find_object():
                 label = result['label']
                 confidence = result['confidence']
 
-                s.send("x:{}, y:{}, distance:{}".format(midpointX, midpointY, raw_distance).encode())
+                vision_system.server_socket.send("x:{}, y:{}, distance:{}".format(midpointX, midpointY, raw_distance).encode())
 
                 yield midpointX, midpointY, raw_distance

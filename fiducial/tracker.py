@@ -3,23 +3,7 @@ import cv2
 import cv2.aruco as aruco
 import glob
 import socket
-from system import *
-
-#ser = serial.Serial('/dev/ttyUSB0')
-
-print("I'm working...") 
-
-#TCP_IP = '169.254.137.76'
-TCP_IP = '127.0.0.1'
-TCP_PORT = 5006
-BUFFER_SIZE = 1024
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT))
-
-print("I'm connected...") 
-
-cap = cv2.VideoCapture(0)
+import vision_system
 
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -54,7 +38,7 @@ def find_marker():
 
     print("FIDUCIAL SYSTEM UP ##########################")
     while True:
-        ret, frame = cap.read()
+        ret, frame = vision_system.capture.read()
         # operations on the frame come here
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
@@ -89,6 +73,6 @@ def find_marker():
             midpointY = (topleftY + bottomrightY)/2
 
             #print("marker midpoint X: {}, Y: {}".format(midpointX, midpointY))
-            s.send("{}/{}/{}".format(midpointX, midpointY, distance).encode())
+            vision_system.server_socket.send("{}/{}/{}".format(midpointX, midpointY, distance).encode())
     
     return 'new'

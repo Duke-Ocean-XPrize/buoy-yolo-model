@@ -1,5 +1,5 @@
 # Buoy Acquisition System
-> Buoy Aquisition System - YOLO + Fiducial + Controller
+> Buoy Acquisition System - YOLO + Fiducial + Controller
 
 Drone buoy acquisition system X-Prize. 
 
@@ -40,13 +40,13 @@ python system.py
 
 ## Usage example
 
-Run python system.py. Starts OpenCV. Find the buoy via Yolo. If buoy is too clone, find the markers on the buoy via Fiducial
+Run python system.py. Starts OpenCV. Find the buoy via Yolo. If buoy is too close, find the markers on the buoy via Fiducial
 
 
 ## Release History
 
 * 0.0.1
-    * Work in progress- model built on images taken from around the Foundry. We need to rebuild model from above- like drone footage- preferably on water
+    * Work in progress- model built on images taken from around the Foundry. We need to rebuild model with images from above- like drone footage- preferably over water
 
 ## Meta
 
