@@ -4,6 +4,11 @@ import yolo.tracker
 import cv2
 import socket
 
+'''
+(some kind of) distance threshold
+to switch from yolo system
+to fiducial marker system
+'''
 distance_threshold = 20
 
 capture = cv2.VideoCapture(0)
@@ -20,12 +25,16 @@ server_socket.connect((TCP_IP, TCP_PORT))
 if __name__ == '__main__':
     yolo_marker = yolo.tracker.find_object()
     while True:
-        #if next(yolo_marker)[2] < distance_threshold:
+        '''
+        yield yolo buoy distance
+        if distance > distance threshold continue yolo else switch to fiducial system
+        ''''
+        if next(yolo_marker)[2] > distance_threshold:
             print(next(yolo_marker))
-        #else:
-            #fiducial_marker = fiducial.tracker.find_marker()
-            #print("fiducial system running")
-            #print(next(fiducial_marker))
+        else:
+            fiducial_marker = fiducial.tracker.find_marker()
+            print("fiducial system running")
+            print(next(fiducial_marker))
 
 
 
