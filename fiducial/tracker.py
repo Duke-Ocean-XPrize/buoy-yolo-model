@@ -46,26 +46,6 @@ def avg_of_vectors(vector_list):
 
 
 def find_marker():
-    for fname in images:
-        img = cv2.imread(fname)
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-
-        # Find the chess board corners
-        ret, corners = cv2.findChessboardCorners(gray, (7,6),None)
-        # If found, add object points, image points (after refining them)
-        if ret == True:
-            objpoints.append(objp)
-
-            corners2 = cv2.cornerSubPix(gray,corners,(11,11),(-1,-1),criteria)
-            imgpoints.append(corners2)
-
-            # Draw and display the corners
-            img = cv2.drawChessboardCorners(img, (7,6), corners2,ret)
-
-
-    ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
-
-    print("FIDUCIAL SYSTEM UP ##########################")
     while True:
         ret, frame = vision_system.capture.read()
         # operations on the frame come here
