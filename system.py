@@ -6,12 +6,12 @@ threshold = 540
 if __name__ == '__main__':
     yolo_marker = yolo.tracker.find_object()
     while True:
-        if yolo_marker.__next__()[2] < threshold:
-            print(yolo_marker.__next__())
+        if next(yolo_marker)[2] < threshold:
+            print(next(yolo_marker))
         else:
             fiducial_marker = fiducial.tracker.find_marker()
             print("fiducial system running")
-            print(fiducial_marker.__next__())
+            print(next(fiducial_marker))
 
 
 
