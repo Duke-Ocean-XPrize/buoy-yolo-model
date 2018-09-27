@@ -34,6 +34,6 @@ def find_object():
                 label = result['label']
                 confidence = result['confidence']
 
-                vision_system.server_socket.send("x:{}, y:{}, distance:{}".format(midpointX, midpointY, raw_distance).encode())
+                vision_system.server_socket.send("{},{},{}".format(midpointX, midpointY, raw_distance).encode())
 
                 yield midpointX, midpointY, raw_distance

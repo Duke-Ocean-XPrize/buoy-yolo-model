@@ -72,7 +72,7 @@ def find_marker():
             midpointX = (topleftX  + bottomrightX)/2 
             midpointY = (topleftY + bottomrightY)/2
 
-            #print("marker midpoint X: {}, Y: {}".format(midpointX, midpointY))
-            vision_system.server_socket.send("{}/{}/{}".format(midpointX, midpointY, distance).encode())
+            #print("marker midpoint X: {}, Y: {}, distance".format(midpointX, midpointY, distance))
+            vision_system.server_socket.send("{},{},{}".format(midpointX, midpointY, distance).encode())
     
     return 'new'
