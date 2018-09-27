@@ -95,7 +95,7 @@ def land():
     vehicle.close()
     quit()
 
-def up():
+def move_up():
     global vehicle
     global Tn
     global r, p, y
@@ -158,14 +158,14 @@ def stop():
     pwm.set_pwm(2, 0, servo_min)
 
 
-def left(n):
+def move_left(n):
     global r
     if(r-n>=1000):
         r = r-n
         nr = int(r *4096/9000)
         pwm.set_pwm(0, 0, nr)
 
-def right(n):
+def move_right(n):
     global r
     if(r+n <=2000):
         r = r+n
@@ -179,7 +179,7 @@ def forward(n):
         np = int(p *4096/9000)
         pwm.set_pwm(1, 0, np)
 
-def backward(n):
+def move_backward(n):
     global p
     if(p+n<=2000):
         p = p+n

@@ -75,4 +75,4 @@ def find_marker():
             #print("marker midpoint X: {}, Y: {}, distance".format(midpointX, midpointY, distance))
             vision_system.server_socket.send("{},{},{}".format(midpointX, midpointY, distance).encode())
     
-    return 'new'
+            yield midpointX, midpointY, raw_distance

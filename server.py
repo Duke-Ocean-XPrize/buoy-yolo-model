@@ -1,5 +1,5 @@
-
 import socket
+import vision_system
 #import control.movement
  
 TCP_IP = '127.0.0.1'
@@ -9,6 +9,29 @@ BUFFER_SIZE = 20  # Normally 1024, but we want fast response
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
+
+x_center_threshold = cv2.CAP_PROP_FRAME_WIDTH/2
+y_center_threshold = cv2.CAP_PROP_FRAME_HEIGHT/2
+
+drop_thresh = 10
+x_down_center_threshold = (cv2.CAP_PROP_FRAME_WIDTH/2 - drop_thresh)
+y_down_center_threshold = (cv2.CAP_PROP_FRAME_HEIGHT/2 - drop_thresh)
+
+'''
+            y_coord
+                |
+                |
+            ---------
+            |   |   |
+            |   |   |
+x_coord---------------------
+            |   |   |
+            |   |   |
+            --------
+                |
+                |
+'''
+
 
 def pid_transform(x_coord, y_coord, distance):
     '''
@@ -35,9 +58,25 @@ while 1:
     print("z_coord {}".format(z_coord))
 
     '''
-    if x_coord > center_threshold and x_coord < center_threshold:
-                land()
-    elif y_coord < center_threshold and y_coord < center_threshold:
-            left(pid_transform(data))
+    you need to fix these
     '''
+    if x_coord > x_center_threshold and y_coord > y_center_threshold:
+        #move_left(pid_transform(data))
+        print("i'm moving LEFT")
+    elif x_coord < x_center_threshold and y_coord < y_center_threshold:
+        #move_rigth(pid_transform(data))
+        print("i'm moving RIGHT")
+    elif x_coord < x_center_threshold and y_coord > y_center_threshold:
+        #move_backward(pid_transform(data))
+        print("i'm moving BACKWARDS")
+    elif x_coord < x_center_threshold and y_coord > y_center_threshold:
+        #move_forward(pid_transform(data))
+        print("i'm moving FORWARD")
+    elif x_coord > x_center_threshold and y_coord < y_center_threshold:
+        #land()
+        print("i'm landing")
+    else:
+        #hold(pid_transform(data))
+        print("i'm moving HOLDING")
+
 conn.close()
