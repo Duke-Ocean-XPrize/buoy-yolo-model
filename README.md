@@ -36,12 +36,12 @@ python server.py
 
 ## Step 3: Run model + inferences
 ```sh
-python video.py
+python system.py
 ```
 
 ## Usage example
 
-Run python video.py. Starts OpenCV. Find the buoy. 
+Run python system.py. Starts OpenCV. Find the buoy via Yolo. If buoy is too clone, find the markers on the buoy via Fiducial
 
 
 ## Release History
