@@ -35,12 +35,12 @@ python server.py
 
 ## Step 3: Run model + inferences
 ```sh
-python system.py
+python vision_system.py
 ```
 
 ## Usage example
 
-Run python system.py. Starts OpenCV. Find the buoy via Yolo. If buoy is too close, find the markers on the buoy via Fiducial
+Run python vision_system.py. Starts OpenCV. Find the buoy via Yolo. If buoy is too close, find the markers on the buoy via Fiducial
 
 
 ## Release History
