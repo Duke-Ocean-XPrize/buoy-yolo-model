@@ -16,7 +16,7 @@ capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 TCP_IP = '127.0.0.1'
-TCP_PORT = 5005
+TCP_PORT = 5006
 BUFFER_SIZE = 1024
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         '''
         yield yolo buoy distance
         if distance > distance threshold continue yolo else switch to fiducial system
-        ''''
+        '''
         if next(yolo_marker)[2] > distance_threshold:
             print(next(yolo_marker))
         else:

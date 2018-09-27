@@ -1,21 +1,28 @@
 import socket
-import vision_system
 #import control.movement
  
 TCP_IP = '127.0.0.1'
-TCP_PORT = 5005
+TCP_PORT = 5006
 BUFFER_SIZE = 20  # Normally 1024, but we want fast response
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
 
-x_center_threshold = cv2.CAP_PROP_FRAME_WIDTH/2
-y_center_threshold = cv2.CAP_PROP_FRAME_HEIGHT/2
+viewport_x_size = 640
+viewport_y_size = 480
 
-drop_thresh = 10
-x_down_center_threshold = (cv2.CAP_PROP_FRAME_WIDTH/2 - drop_thresh)
-y_down_center_threshold = (cv2.CAP_PROP_FRAME_HEIGHT/2 - drop_thresh)
+
+x_center_threshold = viewport_x_size/2
+y_center_threshold = viewport_y_size/2
+
+
+
+drop_thresh = 30
+x_down_center_threshold = (viewport_x_size/2 - drop_thresh)
+y_down_center_threshold = (viewport_y_size/2 - drop_thresh)
+
+
 
 '''
             y_coord
@@ -50,33 +57,36 @@ while 1:
     #convert to list of coords
     data_string = data.decode("utf-8") 
     data_list = data_string.split(",")
-    x_coord = float(data_list[0])
-    y_coord = float(data_list[1])
-    z_coord = float(data_list[2])
-    print("x_coord {}".format(x_coord))
-    print("y_coord {}".format(y_coord))
-    print("z_coord {}".format(z_coord))
+    try:
+        x_coord = float(data_list[0])
+        y_coord = float(data_list[1])
+        z_coord = float(data_list[2])
+        print("x_coord {}".format(x_coord))
+        print("y_coord {}".format(y_coord))
+        print("z_coord {}".format(z_coord))
 
-    '''
-    you need to fix these
-    '''
-    if x_coord > x_center_threshold and y_coord > y_center_threshold:
-        #move_left(pid_transform(data))
-        print("i'm moving LEFT")
-    elif x_coord < x_center_threshold and y_coord < y_center_threshold:
-        #move_rigth(pid_transform(data))
-        print("i'm moving RIGHT")
-    elif x_coord < x_center_threshold and y_coord > y_center_threshold:
-        #move_backward(pid_transform(data))
-        print("i'm moving BACKWARDS")
-    elif x_coord < x_center_threshold and y_coord > y_center_threshold:
-        #move_forward(pid_transform(data))
-        print("i'm moving FORWARD")
-    elif x_coord > x_center_threshold and y_coord < y_center_threshold:
-        #land()
-        print("i'm landing")
-    else:
-        #hold(pid_transform(data))
-        print("i'm moving HOLDING")
+        x_dist = abs(x_coord - 600)
+        y_dist = abs(y_coord - 400)
+
+
+        '''
+        you need to fix these
+        '''
+        if x_coord > x_center_threshold:
+            #move_left(pid_transform(data))
+            print("move RIGHT")
+        else:
+            print("move LEFT")
+
+        if y_coord < x_center_threshold:
+            #move_rigth(pid_transform(data))
+            print("move DOWN")
+        else:
+            print("move UP")
+
+        if x_dist > drop_thresh and y_dist < drop_thresh:
+            print("I'M LANDING")
+    except:
+        pass
 
 conn.close()
