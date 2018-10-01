@@ -10,11 +10,11 @@ print("Connecting to servers…")
 yolo_socket.connect("tcp://localhost:5556")
 fiducial_socket.connect("tcp://localhost:5555")
 
-zip_filter = "10003"
-other_filter = "10004"
+yolo_filter = "1"
+fiducial_filter = "2"
 
-yolo_socket.setsockopt_string(zmq.SUBSCRIBE, zip_filter)
-fiducial_socket.setsockopt_string(zmq.SUBSCRIBE, other_filter)
+yolo_socket.setsockopt_string(zmq.SUBSCRIBE, yolo_filter)
+fiducial_socket.setsockopt_string(zmq.SUBSCRIBE, fiducial_filter)
 
 viewport_x_size = 640
 viewport_y_size = 480
@@ -56,8 +56,8 @@ while True:
     yolo_data = yolo_socket.recv_string()
     fiducial_data = fiducial_socket.recv_string()
     
-    midpointX, midpointY, raw_distance = yolo_data.split(",")
-    midpointX, midpointY, raw_distance = fiducial_data.split(",")
+    yolo_system_id, midpointX, midpointY, raw_distance = yolo_data.split(",")
+    fiducial_system_id, midpointX, midpointY, raw_distance = fiducial_data.split(",")
     try:
         x_coord = float(data_list[0])
         y_coord = float(data_list[1])

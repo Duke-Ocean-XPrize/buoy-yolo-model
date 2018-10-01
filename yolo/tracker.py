@@ -3,8 +3,14 @@ from darkflow.net.build import TFNet
 import numpy as np
 import time
 import timeit
-import zmq
 import vision_system
+import zmq
+
+context = zmq.Context()
+socket = context.socket(zmq.PUB)
+socket.bind("tcp://*:5555")
+
+system_id = "1"
 
 options = {
     'model': './yolo/cfg/tiny-yolo-voc-1c.cfg',
@@ -34,6 +40,6 @@ def find_object():
                 label = result['label']
                 confidence = result['confidence']
 
-                vision_system.server_socket.send_string("{},{},{}".format(midpointX, midpointY, raw_distance).encode())
+                socket.send_string("{},{},{},{}".format(system_id, midpointX, midpointY, raw_distance))
 
                 yield midpointX, midpointY, raw_distance

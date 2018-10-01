@@ -2,10 +2,16 @@ import numpy as np
 import cv2
 import cv2.aruco as aruco
 import glob
-import socket
-import vision_system
 import math
 import yaml
+import vision_system
+import zmq
+
+context = zmq.Context()
+socket = context.socket(zmq.PUB)
+socket.bind("tcp://*:5556")
+
+system_id = "2"
 
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -108,6 +114,6 @@ def find_marker():
                 visual_center_of_markers = floor_midpoint(polylabel([marker_midpoints]))
                 translational_vector = (avg_of_vectors(x_values), avg_of_vectors(y_values), avg_of_vectors(z_values))
 
-            vision_system.server_socket.send_string("{},{},{}".format(str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]).encode())
+            socket.send_string("{},{},{},{}".format(system_id,str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]))
     
             yield str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]
