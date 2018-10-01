@@ -2,7 +2,7 @@ import fiducial.tracker
 import yolo.tracker
 
 import cv2
-import socket
+import zmq
 
 '''
 (some kind of) distance threshold
@@ -15,12 +15,9 @@ capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-TCP_IP = '127.0.0.1'
-TCP_PORT = 5006
-BUFFER_SIZE = 1024
-
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.connect((TCP_IP, TCP_PORT))
+context = zmq.Context()
+server_socket = context.socket(zmq.PUB)
+server_socket.bind("tcp://*:5556")
 
 if __name__ == '__main__':
     yolo_marker = yolo.tracker.find_object()

@@ -108,6 +108,6 @@ def find_marker():
                 visual_center_of_markers = floor_midpoint(polylabel([marker_midpoints]))
                 translational_vector = (avg_of_vectors(x_values), avg_of_vectors(y_values), avg_of_vectors(z_values))
 
-            vision_system.server_socket.send("{},{},{}".format(str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]).encode())
+            vision_system.server_socket.send_string("{},{},{}".format(str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]).encode())
     
             yield str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]

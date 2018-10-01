@@ -3,7 +3,7 @@ from darkflow.net.build import TFNet
 import numpy as np
 import time
 import timeit
-import socket
+import zmq
 import vision_system
 
 options = {
@@ -34,6 +34,6 @@ def find_object():
                 label = result['label']
                 confidence = result['confidence']
 
-                vision_system.server_socket.send("{},{},{}".format(midpointX, midpointY, raw_distance).encode())
+                vision_system.server_socket.send_string("{},{},{}".format(midpointX, midpointY, raw_distance).encode())
 
                 yield midpointX, midpointY, raw_distance

@@ -1,13 +1,20 @@
-import socket
+import zmq
 #import control.movement
  
-TCP_IP = '127.0.0.1'
-TCP_PORT = 5006
-BUFFER_SIZE = 20  # Normally 1024, but we want fast response
- 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((TCP_IP, TCP_PORT))
-s.listen(1)
+#  Socket to talk to server
+context = zmq.Context()
+yolo_socket = context.socket(zmq.SUB)
+fiducial_socket = context.socket(zmq.SUB)
+
+print("Connecting to servers…")
+yolo_socket.connect("tcp://localhost:5556")
+fiducial_socket.connect("tcp://localhost:5555")
+
+zip_filter = "10003"
+other_filter = "10004"
+
+yolo_socket.setsockopt_string(zmq.SUBSCRIBE, zip_filter)
+fiducial_socket.setsockopt_string(zmq.SUBSCRIBE, other_filter)
 
 viewport_x_size = 640
 viewport_y_size = 480
@@ -21,8 +28,6 @@ y_center_threshold = viewport_y_size/2
 drop_thresh = 30
 x_down_center_threshold = (viewport_x_size/2 - drop_thresh)
 y_down_center_threshold = (viewport_y_size/2 - drop_thresh)
-
-
 
 '''
             y_coord
@@ -47,16 +52,12 @@ def pid_transform(x_coord, y_coord, distance):
     return data
 
  
-conn, addr = s.accept()
-print('Connection address:', addr)
-while 1:
-    data = conn.recv(BUFFER_SIZE)
-    if not data: break
-    conn.send(data)  # echo
-
-    #convert to list of coords
-    data_string = data.decode("utf-8") 
-    data_list = data_string.split(",")
+while True:
+    yolo_data = yolo_socket.recv_string()
+    fiducial_data = fiducial_socket.recv_string()
+    
+    midpointX, midpointY, raw_distance = yolo_data.split(",")
+    midpointX, midpointY, raw_distance = fiducial_data.split(",")
     try:
         x_coord = float(data_list[0])
         y_coord = float(data_list[1])
