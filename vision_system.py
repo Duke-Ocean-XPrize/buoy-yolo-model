@@ -9,6 +9,20 @@ import zmq
 to switch from yolo system
 to fiducial marker system
 '''
+
+import zmq
+#import control.movement
+ 
+#  Socket to talk to server
+context = zmq.Context()
+yolo_socket = context.socket(zmq.SUB)
+fiducial_socket = context.socket(zmq.SUB)
+
+print("Connecting to servers…")
+yolo_socket.connect("tcp://localhost:5556")
+fiducial_socket.connect("tcp://localhost:5555")
+
+
 distance_threshold = 20
 
 capture = cv2.VideoCapture(0)

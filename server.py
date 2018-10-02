@@ -23,8 +23,6 @@ viewport_y_size = 480
 x_center_threshold = viewport_x_size/2
 y_center_threshold = viewport_y_size/2
 
-
-
 drop_thresh = 30
 x_down_center_threshold = (viewport_x_size/2 - drop_thresh)
 y_down_center_threshold = (viewport_y_size/2 - drop_thresh)
@@ -58,6 +56,8 @@ while True:
     
     yolo_system_id, midpointX, midpointY, raw_distance = yolo_data.split(",")
     fiducial_system_id, midpointX, midpointY, raw_distance = fiducial_data.split(",")
+    print(yolo_system_id)
+    print(fiducial_system_id)
     try:
         x_coord = float(data_list[0])
         y_coord = float(data_list[1])
