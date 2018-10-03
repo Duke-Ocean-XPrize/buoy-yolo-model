@@ -37,7 +37,6 @@ def connect_drone():
     print(vehicle.location.global_relative_frame.alt)
     
 
-
 def emergency_end_program(*args):
     global vehicle
     global Tn

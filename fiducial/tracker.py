@@ -4,12 +4,15 @@ import cv2.aruco as aruco
 import glob
 import math
 import yaml
-import vision_system
 import zmq
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://*:5556")
+
+capture = cv2.VideoCapture(0)
+capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 system_id = "2"
 
@@ -52,8 +55,9 @@ def avg_of_vectors(vector_list):
 
 
 def find_marker():
+    print("FIDUCIAL SYSTEM UP ##########################")
     while True:
-        ret, frame = vision_system.capture.read()
+        ret, frame = capture.read()
         # operations on the frame come here
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
@@ -86,7 +90,7 @@ def find_marker():
                 bottomrightY = math.floor(corners[index][0][2][1])
                 bottomleftX = math.floor(corners[index][0][3][0])
                 bottomlextY = math.floor(corners[index][0][3][1])
-                midpoint = polylabel([[[topleftX, topleftY], [toprightX, toprightY], [bottomrightX, bottomrightY], [bottomleftX, bottomlextY]]])
+                midpoint = [[topleftX, topleftY], [toprightX, toprightY], [bottomrightX, bottomrightY], [bottomleftX, bottomlextY]]
                 ###### DRAW ID #####
                 cv2.putText(frame, "Id: " + str(id), floor_midpoint(midpoint), font, 1, (0,255,0),2,cv2.LINE_AA)
                 marker_midpoints.append([math.floor(midpoint[0]), math.floor(midpoint[1])])
@@ -116,4 +120,3 @@ def find_marker():
 
             socket.send_string("{},{},{},{}".format(system_id,str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]))
     
-            yield str(translational_vector[0])[:7], str(translational_vector[1])[:7], str(translational_vector[2])[:7]

@@ -1,93 +1,58 @@
 import zmq
 #import control.movement
- 
-#  Socket to talk to server
-context = zmq.Context()
-yolo_socket = context.socket(zmq.SUB)
-fiducial_socket = context.socket(zmq.SUB)
-
-print("Connecting to servers…")
-yolo_socket.connect("tcp://localhost:5556")
-fiducial_socket.connect("tcp://localhost:5555")
 
 yolo_filter = "1"
 fiducial_filter = "2"
+yolo_port = 5555
+fiducial_port = 5556
+ 
+#  Socket to talk to server
+context = zmq.Context()
 
-yolo_socket.setsockopt_string(zmq.SUBSCRIBE, yolo_filter)
-fiducial_socket.setsockopt_string(zmq.SUBSCRIBE, fiducial_filter)
-
+# yolo globals
 viewport_x_size = 640
 viewport_y_size = 480
 
-
 x_center_threshold = viewport_x_size/2
 y_center_threshold = viewport_y_size/2
-
 drop_thresh = 30
-x_down_center_threshold = (viewport_x_size/2 - drop_thresh)
-y_down_center_threshold = (viewport_y_size/2 - drop_thresh)
 
-'''
-            y_coord
-                |
-                |
-            ---------
-            |   |   |
-            |   |   |
-x_coord---------------------
-            |   |   |
-            |   |   |
-            --------
-                |
-                |
-'''
+socket = context.socket(zmq.SUB)
+
+socket.connect("tcp://localhost:{}".format(yolo_port))
+socket.connect("tcp://localhost:{}".format(fiducial_port))
+socket.setsockopt_string(zmq.SUBSCRIBE, yolo_filter)
+socket.setsockopt_string(zmq.SUBSCRIBE, fiducial_filter)
 
 
-def pid_transform(x_coord, y_coord, distance):
-    '''
-    transform raw image coordinates to PID directional movements
-    '''
-    return data
+def connect_vision():
+    vision_data = socket.recv_string()
+    vision_id, midpointX, midpointY, raw_distance = vision_data.split(",")
+    midpointX = float(midpointX)
+    midpointY = float(midpointY)
+    raw_distance = float(raw_distance)
+    print("{},{},{},{}".format(vision_id,midpointX, midpointY, raw_distance))
 
- 
-while True:
-    yolo_data = yolo_socket.recv_string()
-    fiducial_data = fiducial_socket.recv_string()
+    x_dist = abs(midpointX - viewport_x_size)
+    y_dist = abs(midpointY - viewport_y_size)
+
+    if midpointX > x_center_threshold:
+        print("move RIGHT")
+    else:
+        print("move LEFT")
+
+    if midpointY < x_center_threshold:
+        print("move DOWN")
+    else:
+        print("move UP")
+
+    if x_dist > drop_thresh and y_dist < drop_thresh:
+        print("I'M LANDING")
     
-    yolo_system_id, midpointX, midpointY, raw_distance = yolo_data.split(",")
-    fiducial_system_id, midpointX, midpointY, raw_distance = fiducial_data.split(",")
-    print(yolo_system_id)
-    print(fiducial_system_id)
-    try:
-        x_coord = float(data_list[0])
-        y_coord = float(data_list[1])
-        z_coord = float(data_list[2])
-        print("x_coord {}".format(x_coord))
-        print("y_coord {}".format(y_coord))
-        print("z_coord {}".format(z_coord))
+    return raw_distance
 
-        x_dist = abs(x_coord - 600)
-        y_dist = abs(y_coord - 400)
+while True:
+    connect_vision()
+        
 
-
-        '''
-        you need to fix these
-        '''
-        if x_coord > x_center_threshold:
-            #move_left(pid_transform(data))
-            print("move RIGHT")
-        else:
-            print("move LEFT")
-
-        if y_coord < x_center_threshold:
-            #move_rigth(pid_transform(data))
-            print("move DOWN")
-        else:
-            print("move UP")
-
-        if x_dist > drop_thresh and y_dist < drop_thresh:
-            print("I'M LANDING")
-    except:
-        pass
-
-conn.close()
+   
